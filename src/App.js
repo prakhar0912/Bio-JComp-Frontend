@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
-import { GlobalProvider, useData, usePrev, useSearch, useUpdData, useNext } from './GlobalContext'
+import { GlobalProvider, useData, usePrev, useSearch, useUpdData, useNext, useTotal } from './GlobalContext'
 import DelImg from './img/del.png'
 import UpdImg from './img/upd.png'
 
@@ -9,10 +9,12 @@ const Pagination = ({ getData }) => {
 
   const next = useNext()[0]
   const prev = usePrev()[0]
+  const total = useTotal()[0]
 
   return (
     <div className="pagination">
       <button disabled={prev === false ? true : false} onClick={() => getData('prev')}>Prev</button>
+      <p>Total: {total}</p>
       <button disabled={next === false ? true : false} onClick={() => getData('next')}>Next</button>
     </div>
   )
@@ -61,7 +63,7 @@ const IndiData = ({ data, getData }) => {
       redirect: 'follow'
     };
 
-    fetch("http://localhost:4001/update", requestOptions)
+    fetch("http://localhost:3000/update", requestOptions)
       .then(response => response.json())
       .then(result => {
         console.log(result)
@@ -86,7 +88,7 @@ const IndiData = ({ data, getData }) => {
       redirect: 'follow'
     };
 
-    fetch("http://localhost:4001/delete", requestOptions)
+    fetch("http://localhost:3000/delete", requestOptions)
       .then(response => response.json())
       .then(result => {
         console.log(result)
@@ -179,6 +181,7 @@ const Home = () => {
   const [data, setData] = useData()
   const [next, setNext] = useNext()
   const [prev, setPrev] = usePrev()
+  const [total, setTotal] = useTotal()
   const search = useSearch()
 
   const getData = (nextPrev, query) => {
@@ -207,13 +210,13 @@ const Home = () => {
     let url;
 
     if (nextPrev === 'next') {
-      url = "http://localhost:4001/entries?start=" + next + "&limit=10"
+      url = "http://localhost:3000/entries?start=" + next + "&limit=10"
     }
     else if (nextPrev === 'prev') {
-      url = "http://localhost:4001/entries?start=" + prev + "&limit=10"
+      url = "http://localhost:3000/entries?start=" + prev + "&limit=10"
     }
     else {
-      url = "http://localhost:4001/entries?start=" + "0" + "&limit=10"
+      url = "http://localhost:3000/entries?start=" + "0" + "&limit=10"
     }
 
 
@@ -223,6 +226,7 @@ const Home = () => {
         console.log(result)
         result.results.forEach(ele => ele['show'] = false)
         setData(result.results)
+        setTotal(result.total)
 
         if (result.next) {
           setNext(result.next.start)
@@ -293,7 +297,7 @@ const AddEntry = () => {
       redirect: 'follow'
     };
     let ok = true;
-    fetch("http://localhost:4001/url", requestOptions)
+    fetch("http://localhost:3000/url", requestOptions)
       .then(response => {
         let res = response.json()
         if (!response.ok) {
@@ -324,7 +328,7 @@ const AddEntry = () => {
       redirect: 'follow'
     };
 
-    fetch("http://localhost:4001/push", requestOptions)
+    fetch("http://localhost:3000/push", requestOptions)
       .then(response => {
         let res = response.json()
         if (!response.ok) {

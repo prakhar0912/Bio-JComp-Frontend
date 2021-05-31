@@ -5,6 +5,7 @@ const NextContext = createContext()
 const PrevContext = createContext()
 const SearchContext = createContext()
 const UpdDataContext = createContext()
+const TotalContext = createContext()
 
 
 export const useData = () => {
@@ -27,12 +28,17 @@ export const useUpdData = () => {
     return useContext(UpdDataContext)
 }
 
+export const useTotal = () => {
+    return useContext(TotalContext)
+}
+
 export const GlobalProvider = ({ children }) => {
 
     const [data, setData] = useState([])
     const [next, setNext] = useState(false)
     const [prev, setPrev] = useState(false)
     const search = useRef({ col: '_id', term: '', on: false })
+    const [total, setTotal] = useState(0)
     const upd = useRef({
         _id: "",
         Gene_Name: "",
@@ -62,7 +68,9 @@ export const GlobalProvider = ({ children }) => {
                 <NextContext.Provider value={[next, setNext]}>
                     <PrevContext.Provider value={[prev, setPrev]}>
                         <DataContext.Provider value={[data, setData]}>
-                            {children}
+                            <TotalContext.Provider value={[total, setTotal]}>
+                                {children}
+                            </TotalContext.Provider>
                         </DataContext.Provider>
                     </PrevContext.Provider>
                 </NextContext.Provider>

@@ -145,6 +145,10 @@ body {
   width: fit-content;
 }
 
+.pagination > p{
+  display: inline;
+}
+
 .pagination > button{
   margin: 0 20px;
   padding: 10px;
