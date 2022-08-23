@@ -98,6 +98,7 @@ const IndiData = ({ data, getData }) => {
       .catch(error => console.log('error', error));
   }
 
+
   return (
     <div id={data._id} className="entry">
       <div className="outer">
